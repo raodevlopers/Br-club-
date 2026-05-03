@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BR CLUB — Lucky Draw</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --black:      #080808;
+  --dark:       #0E0E0E;
+  --surface:    #141414;
+  --surface2:   #1A1A1A;
+  --border:     rgba(184,134,11,0.2);
+  --border-mid: rgba(184,134,11,0.45);
+  --gold:       #C9A84C;
+  --gold-light: #E8C97A;
+  --gold-pale:  #F5E6B8;
+  --gold-dark:  #8B6914;
+  --red:        #9B1C1C;
+  --red-mid:    #B52020;
+  --red-light:  #D42A2A;
+  --cream:      #F0E6CC;
+  --muted:      rgba(240,230,204,0.45);
+  --fd:         'Cormorant Garamond', Georgia, serif;
+  --fb:         'Montserrat', sans-serif;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--black);color:var(--cream);font-family:var(--fb);font-weight:400;-webkit-font-smoothing:antialiased;overflow-x:hidden;min-height:100vh}
+body::before{content:'';position:fixed;inset:0;z-index:0;background:radial-gradient(ellipse 80% 60% at 50% -10%,rgba(184,134,11,.07) 0%,transparent 70%),radial-gradient(ellipse 60% 40% at 100% 100%,rgba(155,28,28,.06) 0%,transparent 60%),radial-gradient(ellipse 60% 40% at 0% 60%,rgba(184,134,11,.04) 0%,transparent 60%);pointer-events:none}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1.4rem 4rem;background:rgba(8,8,8,.94);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.nav-logo{font-family:var(--fd);font-size:1.6rem;font-weight:700;letter-spacing:.18em;color:var(--gold-light);text-transform:uppercase}
+.nav-tagline{font-family:var(--fb);font-size:.68rem;font-weight:300;letter-spacing:.35em;color:var(--muted);text-transform:uppercase}
+.nav-dot{width:6px;height:6px;border-radius:50%;background:var(--red-light);box-shadow:0 0 8px var(--red-light);animation:livepulse 2s ease-in-out infinite}
+@keyframes livepulse{0%,100%{box-shadow:0 0 6px var(--red-light);opacity:1}50%{box-shadow:0 0 14px var(--red-light);opacity:.6}}
+
+/* HERO */
+.hero{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:8rem 2rem 5rem}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:.8rem;font-family:var(--fb);font-size:.68rem;font-weight:600;letter-spacing:.38em;color:var(--gold);text-transform:uppercase;margin-bottom:2rem;padding:.5rem 1.4rem;border:1px solid var(--border-mid);border-radius:2px;animation:fadeUp .8s ease .1s both}
+.eyebrow-line{width:24px;height:1px;background:var(--gold-dark)}
+.hero-title{font-family:var(--fd);font-size:clamp(3.5rem,11vw,7.5rem);font-weight:300;letter-spacing:.06em;line-height:.9;color:var(--cream);margin-bottom:.4rem;animation:fadeUp .8s ease .25s both}
+.hero-title em{font-style:italic;color:var(--gold-light);font-weight:300}
+.hero-sub{font-family:var(--fd);font-size:clamp(1rem,3vw,1.5rem);font-weight:300;font-style:italic;color:var(--muted);letter-spacing:.04em;margin-bottom:3rem;animation:fadeUp .8s ease .4s both}
+.gold-rule{width:80px;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:0 auto 3rem;animation:fadeUp .8s ease .5s both}
+
+/* COUNTDOWN */
+.countdown-wrap{animation:fadeUp .9s ease .6s both;margin-bottom:3.5rem}
+.cd-title{font-family:var(--fb);font-size:.65rem;font-weight:600;letter-spacing:.38em;color:var(--gold-dark);text-transform:uppercase;margin-bottom:1.2rem}
+.countdown-grid{display:flex;align-items:flex-start;justify-content:center}
+.cd-unit{text-align:center;padding:0 2rem;position:relative}
+.cd-unit+.cd-unit::before{content:'';position:absolute;left:0;top:.5rem;bottom:1.6rem;width:1px;background:var(--border)}
+.cd-num{font-family:var(--fd);font-size:clamp(3rem,9vw,5.5rem);font-weight:700;line-height:1;color:var(--gold-light);display:block;letter-spacing:-.02em}
+.cd-label{font-family:var(--fb);font-size:.6rem;font-weight:500;letter-spacing:.3em;color:var(--muted);text-transform:uppercase;margin-top:.5rem;display:block}
+.result-live{display:none;font-family:var(--fd);font-size:clamp(1.8rem,5vw,3rem);font-weight:600;font-style:italic;color:var(--gold-light);letter-spacing:.04em;padding:1.5rem 3rem;border:1px solid var(--border-mid);border-radius:2px}
+.scroll-ind{display:flex;flex-direction:column;align-items:center;gap:.5rem;font-family:var(--fb);font-size:.6rem;letter-spacing:.3em;color:var(--gold-dark);text-transform:uppercase;animation:fadeUp 1s ease 1s both}
+.scroll-line{width:1px;height:40px;background:linear-gradient(180deg,var(--gold-dark),transparent);animation:scrollDrop 2s ease-in-out infinite}
+@keyframes scrollDrop{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}50.01%{transform:scaleY(1);transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+
+/* SECTIONS */
+.section{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:6rem 3rem}
+.sec-header{text-align:center;margin-bottom:4rem}
+.sec-eyebrow{font-family:var(--fb);font-size:.65rem;font-weight:600;letter-spacing:.4em;color:var(--gold);text-transform:uppercase;display:block;margin-bottom:1rem}
+.sec-title{font-family:var(--fd);font-size:clamp(2rem,5vw,3.2rem);font-weight:300;color:var(--cream);letter-spacing:.04em;line-height:1.15}
+.sec-title em{font-style:italic;color:var(--gold-light)}
+
+/* CARDS */
+.cards-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5px;border:1px solid var(--border);background:var(--border);border-radius:4px;overflow:hidden}
+.card{background:var(--surface);padding:3rem 2.5rem;text-align:center;position:relative;transition:background .4s ease;display:flex;flex-direction:column;align-items:center}
+.card:hover{background:var(--surface2)}
+.card.feat{background:linear-gradient(160deg,#1a0e0e 0%,#120808 100%)}
+.card.feat:hover{background:linear-gradient(160deg,#201010 0%,#140a0a 100%)}
+.card-accent{position:absolute;top:0;left:0;right:0;height:2px;background:transparent}
+.card.feat .card-accent{background:linear-gradient(90deg,var(--red),var(--gold),var(--red))}
+.card-tag{font-family:var(--fb);font-size:.6rem;font-weight:600;letter-spacing:.35em;color:var(--gold-dark);text-transform:uppercase;margin-bottom:2rem;padding:.35rem 1rem;border:1px solid rgba(184,134,11,.15);border-radius:2px}
+.card.feat .card-tag{color:var(--red-mid);border-color:rgba(155,28,28,.3)}
+.card-num-label{font-family:var(--fb);font-size:.55rem;font-weight:500;letter-spacing:.3em;color:var(--muted);text-transform:uppercase;margin-bottom:.4rem}
+.card-num{font-family:var(--fd);font-size:clamp(1.2rem,3vw,1.7rem);font-weight:600;color:var(--cream);letter-spacing:.05em;margin-bottom:2.5rem}
+.card-div{width:40px;height:1px;background:var(--border-mid);margin:0 auto 2rem}
+.prize-lbl{font-family:var(--fb);font-size:.55rem;font-weight:600;letter-spacing:.35em;color:var(--muted);text-transform:uppercase;margin-bottom:.6rem}
+.prize{font-family:var(--fd);font-size:clamp(2.5rem,6vw,4rem);font-weight:700;color:var(--gold-light);letter-spacing:-.02em;line-height:1;margin-bottom:2.5rem}
+.card.feat .prize{color:var(--gold-pale)}
+.ticket-row{border-top:1px solid var(--border);width:100%;padding-top:1.5rem;margin-top:auto}
+.ticket-lbl{font-family:var(--fb);font-size:.55rem;font-weight:600;letter-spacing:.35em;color:var(--gold-dark);text-transform:uppercase;margin-bottom:.3rem}
+.ticket-price{font-family:var(--fd);font-size:1.3rem;font-weight:600;color:var(--cream)}
+
+/* URGENCY */
+.urgency{position:relative;z-index:1;border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:linear-gradient(135deg,rgba(20,9,9,.9) 0%,rgba(14,8,8,.95) 100%);padding:4rem 3rem;text-align:center;overflow:hidden}
+.urgency::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent 0px,transparent 98px,rgba(184,134,11,.04) 98px,rgba(184,134,11,.04) 100px);pointer-events:none}
+.urgency-kicker{font-family:var(--fb);font-size:.65rem;font-weight:600;letter-spacing:.4em;color:var(--red-mid);text-transform:uppercase;margin-bottom:1rem}
+.urgency-h{font-family:var(--fd);font-size:clamp(2rem,5vw,3.5rem);font-weight:300;color:var(--cream);letter-spacing:.04em;line-height:1.2;margin-bottom:.6rem}
+.urgency-h strong{font-weight:700;color:var(--gold-light);font-style:italic}
+.urgency-sub{font-family:var(--fd);font-size:clamp(1.1rem,2.5vw,1.5rem);font-weight:300;font-style:italic;color:var(--muted);letter-spacing:.04em}
+.urgency-stats{display:flex;justify-content:center;margin-top:3rem;border:1px solid var(--border);border-radius:2px;overflow:hidden;max-width:500px;margin-left:auto;margin-right:auto}
+.stat{flex:1;padding:1.5rem 1rem;border-right:1px solid var(--border);text-align:center}
+.stat:last-child{border-right:none}
+.stat-val{font-family:var(--fd);font-size:1.8rem;font-weight:700;color:var(--gold-light);line-height:1;display:block}
+.stat-lbl{font-family:var(--fb);font-size:.55rem;font-weight:600;letter-spacing:.25em;color:var(--muted);text-transform:uppercase;margin-top:.4rem;display:block}
+
+/* RESULT INFO */
+.result-info{position:relative;z-index:1;padding:6rem 3rem;max-width:900px;margin:0 auto;text-align:center}
+.result-grid{display:grid;grid-template-columns:1fr 1px 1fr 1px 1fr;border:1px solid var(--border);border-radius:2px;overflow:hidden;margin-top:3rem}
+.result-col{background:var(--surface);padding:2.5rem 2rem;text-align:center}
+.result-sep{background:var(--border)}
+.result-col-lbl{font-family:var(--fb);font-size:.58rem;font-weight:600;letter-spacing:.35em;color:var(--gold-dark);text-transform:uppercase;margin-bottom:.8rem}
+.result-col-val{font-family:var(--fd);font-size:clamp(1.4rem,3vw,2rem);font-weight:600;color:var(--cream);letter-spacing:.03em}
+
+/* CTA */
+.cta-sec{position:relative;z-index:1;padding:6rem 3rem;text-align:center}
+.cta-btn{display:inline-block;font-family:var(--fb);font-size:.78rem;font-weight:600;letter-spacing:.35em;text-transform:uppercase;text-decoration:none;color:var(--black);background:var(--gold-light);padding:1.1rem 3.5rem;border-radius:2px;transition:background .3s,transform .2s,box-shadow .3s;position:relative;overflow:hidden;border:1px solid transparent}
+.cta-btn::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.15) 0%,transparent 60%);pointer-events:none}
+.cta-btn:hover{background:var(--gold-pale);transform:translateY(-2px);box-shadow:0 12px 40px rgba(201,168,76,.3)}
+.cta-alt{display:inline-block;font-family:var(--fb);font-size:.72rem;font-weight:500;letter-spacing:.2em;text-transform:uppercase;text-decoration:none;color:var(--muted);padding:1rem 2.5rem;border:1px solid var(--border);border-radius:2px;margin-left:1rem;transition:border-color .3s,color .3s}
+.cta-alt:hover{border-color:var(--border-mid);color:var(--cream)}
+.cta-note{margin-top:2rem;font-family:var(--fb);font-size:.65rem;font-weight:400;letter-spacing:.15em;color:rgba(240,230,204,.3)}
+
+/* FOOTER */
+footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:2.5rem 4rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+.footer-logo{font-family:var(--fd);font-size:1.1rem;font-weight:700;letter-spacing:.2em;color:var(--gold)}
+.footer-copy{font-family:var(--fb);font-size:.62rem;letter-spacing:.12em;color:rgba(240,230,204,.25);text-align:center}
+.footer-disc{font-family:var(--fb);font-size:.6rem;color:rgba(240,230,204,.18);text-align:right;max-width:280px;line-height:1.6}
+
+/* ANIMATION */
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .8s ease,transform .8s ease}
+.reveal.in{opacity:1;transform:translateY(0)}
+.d1{transition-delay:.1s}.d2{transition-delay:.22s}.d3{transition-delay:.38s}
+
+/* RESPONSIVE */
+@media(max-width:760px){
+  nav{padding:1.2rem 1.5rem}
+  .nav-tagline{display:none}
+  .hero{padding:7rem 1.5rem 4rem}
+  .cd-unit{padding:0 1rem}
+  .section{padding:4rem 1.5rem}
+  .cards-grid{grid-template-columns:1fr;gap:1px}
+  .card{padding:2.5rem 2rem}
+  .urgency{padding:3rem 1.5rem}
+  .result-info{padding:4rem 1.5rem}
+  .result-grid{grid-template-columns:1fr}
+  .result-sep{height:1px;width:100%}
+  .cta-sec{padding:4rem 1.5rem;display:flex;flex-direction:column;align-items:center}
+  .cta-alt{margin-left:0;margin-top:.8rem}
+  footer{flex-direction:column;align-items:center;text-align:center;padding:2rem 1.5rem}
+  .footer-disc{text-align:center}
+}
+@media(max-width:480px){
+  .urgency-stats{flex-direction:column}
+  .stat{border-right:none;border-bottom:1px solid var(--border)}
+  .stat:last-child{border-bottom:none}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-logo">BR CLUB</span>
+  <span class="nav-tagline">Lucky Draw</span>
+  <span class="nav-dot"></span>
+</nav>
+
+<section class="hero">
+  <div class="hero-eyebrow">
+    <span class="eyebrow-line"></span>
+    Official Lucky Draw
+    <span class="eyebrow-line"></span>
+  </div>
+  <h1 class="hero-title">Lucky Draw<br><em>Live</em></h1>
+  <p class="hero-sub">Apna number choose karo aur jeeto bada inaam</p>
+  <div class="gold-rule"></div>
+
+  <div class="countdown-wrap">
+    <div class="cd-title">Result Countdown</div>
+    <div class="countdown-grid" id="cdGrid">
+      <div class="cd-unit"><span class="cd-num" id="cd-d">00</span><span class="cd-label">Days</span></div>
+      <div class="cd-unit"><span class="cd-num" id="cd-h">00</span><span class="cd-label">Hours</span></div>
+      <div class="cd-unit"><span class="cd-num" id="cd-m">00</span><span class="cd-label">Minutes</span></div>
+      <div class="cd-unit"><span class="cd-num" id="cd-s">00</span><span class="cd-label">Seconds</span></div>
+    </div>
+    <div class="result-live" id="resLive">Result is Live</div>
+  </div>
+
+  <div class="scroll-ind">
+    <div class="scroll-line"></div>
+    Scroll
+  </div>
+</section>
+
+<section class="section reveal">
+  <div class="sec-header">
+    <span class="sec-eyebrow">Draw Series</span>
+    <h2 class="sec-title">Three Series.<br><em>Three Prizes.</em></h2>
+  </div>
+  <div class="cards-grid">
+    <div class="card reveal d1">
+      <div class="card-accent"></div>
+      <div class="card-tag">Series 01</div>
+      <div class="card-num-label">Ticket Numbers</div>
+      <div class="card-num">44401 &ndash; 44500</div>
+      <div class="card-div"></div>
+      <div class="prize-lbl">Prize Amount</div>
+      <div class="prize">&#8377;5,100</div>
+      <div class="ticket-row">
+        <div class="ticket-lbl">Ticket Price</div>
+        <div class="ticket-price">&#8377;100</div>
+      </div>
+    </div>
+    <div class="card reveal d2">
+      <div class="card-accent"></div>
+      <div class="card-tag">Series 02</div>
+      <div class="card-num-label">Ticket Numbers</div>
+      <div class="card-num">67501 &ndash; 67600</div>
+      <div class="card-div"></div>
+      <div class="prize-lbl">Prize Amount</div>
+      <div class="prize">&#8377;21,000</div>
+      <div class="ticket-row">
+        <div class="ticket-lbl">Ticket Price</div>
+        <div class="ticket-price">&#8377;250</div>
+      </div>
+    </div>
+    <div class="card feat reveal d3">
+      <div class="card-accent"></div>
+      <div class="card-tag">Grand Prize</div>
+      <div class="card-num-label">Ticket Numbers</div>
+      <div class="card-num">77301 &ndash; 77400</div>
+      <div class="card-div"></div>
+      <div class="prize-lbl">Top Prize</div>
+      <div class="prize">&#8377;31,000</div>
+      <div class="ticket-row">
+        <div class="ticket-lbl">Ticket Price</div>
+        <div class="ticket-price">&#8377;500</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="urgency reveal">
+  <div class="urgency-kicker">Limited Availability</div>
+  <h2 class="urgency-h">Limited Tickets <strong>Available</strong></h2>
+  <p class="urgency-sub">Pehle Aao &mdash; Pehle Pao</p>
+  <div class="urgency-stats">
+    <div class="stat"><span class="stat-val">3</span><span class="stat-lbl">Series</span></div>
+    <div class="stat"><span class="stat-val">100</span><span class="stat-lbl">Tickets Each</span></div>
+    <div class="stat"><span class="stat-val">&#8377;57K</span><span class="stat-lbl">Total Prizes</span></div>
+  </div>
+</div>
+
+<div class="result-info reveal">
+  <div class="sec-header">
+    <span class="sec-eyebrow">Result Schedule</span>
+    <h2 class="sec-title">When &amp; <em>Where</em></h2>
+  </div>
+  <div class="result-grid">
+    <div class="result-col">
+      <div class="result-col-lbl">Result Date</div>
+      <div class="result-col-val">5 May 2025</div>
+    </div>
+    <div class="result-sep"></div>
+    <div class="result-col">
+      <div class="result-col-lbl">Result Time</div>
+      <div class="result-col-val">8:00 PM IST</div>
+    </div>
+    <div class="result-sep"></div>
+    <div class="result-col">
+      <div class="result-col-lbl">Platform</div>
+      <div class="result-col-val">BR CLUB</div>
+    </div>
+  </div>
+</div>
+
+<div class="cta-sec reveal">
+  <a href="result.html" class="cta-btn">View Result</a>
+  <a href="#" class="cta-alt">How It Works</a>
+  <p class="cta-note">Result announced on 5 May at 8:00 PM IST &mdash; BR CLUB Official</p>
+</div>
+
+<footer>
+  <div class="footer-logo">BR CLUB</div>
+  <div class="footer-copy">&copy; 2025 BR CLUB &mdash; All Rights Reserved</div>
+  <div class="footer-disc">For promotional and demo purposes only. Please participate responsibly.</div>
+</footer>
+
+<script>
+(function(){
+  var target=new Date('2025-05-05T14:30:00Z');
+  function pad(n){return String(n).padStart(2,'0')}
+  function tick(){
+    var diff=target-new Date();
+    if(diff<=0){
+      document.getElementById('cdGrid').style.display='none';
+      document.getElementById('resLive').style.display='block';
+      return;
+    }
+    document.getElementById('cd-d').textContent=pad(Math.floor(diff/864e5));
+    document.getElementById('cd-h').textContent=pad(Math.floor((diff%864e5)/36e5));
+    document.getElementById('cd-m').textContent=pad(Math.floor((diff%36e5)/6e4));
+    document.getElementById('cd-s').textContent=pad(Math.floor((diff%6e4)/1e3));
+  }
+  tick();setInterval(tick,1000);
+})();
+(function(){
+  var els=document.querySelectorAll('.reveal');
+  var io=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});
+  },{threshold:.1});
+  els.forEach(function(el){io.observe(el);});
+})();
+</script>
+</body>
+</html>
